@@ -20,6 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movie.ui.components.LoadingView
@@ -39,13 +42,17 @@ fun MovieDetailScreen(
     val state by movieDetailViewMode.detailState.collectAsStateWithLifecycle()
     var showVideoPlayer by remember { mutableStateOf(false) }
     var videoUrl by remember { mutableStateOf("https://www.youtube.com/watch?v=YbJOTdZBX1g") }
-    Box(modifier = modifier.fillMaxWidth()) {
+    Box(modifier = modifier
+        .fillMaxWidth()
+        // Removed testTag from root Box
+    ) {
         if (showVideoPlayer && videoUrl.isNotEmpty()) {
             VideoPlayer(
                 videoUrl = videoUrl,
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.Center)
+                    .testTag("videoPlayerView").semantics{contentDescription= "videoPlayerView"}
             )
           //  ExoMediaPlayer(videoUrl=videoUrl,modifier=modifier)
             IconButton(onClick = { showVideoPlayer = false }, modifier = Modifier.align(Alignment.TopEnd)) {
@@ -63,7 +70,7 @@ fun MovieDetailScreen(
                 )
             }
             AnimatedVisibility(visible = !state.isLoading && state.error == null) {
-                BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+                BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("movie_details_screen").semantics { contentDescription = "movie_details_screen" }) { // Added testTag here
                     val boxHeight = maxHeight
                     val topItemHeight = boxHeight * .4f
                     val bodyItemHeight = boxHeight * .6f
@@ -103,4 +110,3 @@ fun MovieDetailScreen(
     }
     LoadingView(isLoading = state.isLoading)
 }
-

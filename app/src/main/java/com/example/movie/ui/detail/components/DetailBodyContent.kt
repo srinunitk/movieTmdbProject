@@ -35,6 +35,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.movie.movie.domain.models.Movie
@@ -103,6 +106,7 @@ fun DetailBodyContent(
                         text = movieDetail.title,
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
+                        modifier = Modifier.testTag("movie_details_title").semantics { contentDescription = "movie_details_title" } // Added testTag here
                     )
                     Spacer(modifier = Modifier.height(itemSpacing))
                     Text(
@@ -128,7 +132,10 @@ fun DetailBodyContent(
                         // Replace with the actual video URL property from movieDetail
                         onWatchVideo(movieDetail.trailerUrl ?: "")
                     }) {
-                        Text(text = "Watch Trailer")
+                        Text(
+                            text = "Watch Trailer",
+                            modifier = Modifier.testTag("watchTrailer").semantics { contentDescription = "Watch Trailer Button" }
+                        )
                     }
                     Spacer(modifier = Modifier.height(itemSpacing))
                     Row(
@@ -305,4 +312,3 @@ private fun Review(
     }
 
 }
-

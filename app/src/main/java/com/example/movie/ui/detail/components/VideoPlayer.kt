@@ -1,9 +1,13 @@
 package com.example.movie.ui.detail.components
 
+import android.R.attr.contentDescription
 import android.net.Uri
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
@@ -32,14 +36,14 @@ fun VideoPlayer(
 
     exoPlayer?.let { player ->
         AndroidView(
-            modifier = modifier,
+            modifier = modifier.testTag("videoPlayerView").semantics{contentDescription="videoPlayerView"},
             factory = {
                 PlayerView(it).apply {
                     this.player = player
                     useController = true
+                    contentDescription = "videoPlayerView" // Set for UIAutomator
                 }
             }
         )
     }
 }
-

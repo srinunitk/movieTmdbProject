@@ -21,6 +21,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -43,6 +45,7 @@ fun MovieCoverImage(
         modifier = modifier
             .size(width = 150.dp, height = 250.dp)
             .padding(itemSpacing)
+            .semantics { contentDescription = "movie_item_${movie.id}" }
             .clickable { onMovieClick(movie.id) }
     ){
         AsyncImage(
@@ -87,3 +90,4 @@ fun MovieCoverImage(
     }
 
 }
+

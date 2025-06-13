@@ -21,6 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -59,7 +62,12 @@ fun HomeScreen(
             }
         }
     }
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("movie_list_screen")
+            .semantics { contentDescription = "movie_list_screen" }
+    ) {
         AnimatedVisibility(visible = state.error != null) {
             Text(
                 text = state.error ?: "unknown error",
@@ -119,3 +127,4 @@ fun HomeScreen(
     }
     LoadingView(isLoading = state.isLoading)
 }
+
