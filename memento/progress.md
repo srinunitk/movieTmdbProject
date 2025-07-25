@@ -27,7 +27,7 @@
 ## Current Status:
 - **Overall**: Project has foundational UI tests and a functional Parental Code feature that gates content.
 - **Previous Task (Completed)**: Integrating parental code validation into the `MovieDetailScreen`.
-- **Current Task (Completed)**: Refining the `ParentalCodeScreen` UI by adding a contextual `AlertBox`.
+- **Current Task (Completed)**: Updating the `parentalcode.md` memento documentation to accurately reflect the feature's implementation.
 
 ## Known Issues:
 - UI tests in `MovieNavigationTest.kt` use a hardcoded movie ID (e.g., `"1376434"`). This should be made dynamic or use test data for robustness.
