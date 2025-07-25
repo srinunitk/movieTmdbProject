@@ -1,22 +1,17 @@
-# Active Context: UI Test Implementation
+# Active Context: Refining Parental Code Screen UI
 
-## Current Work Focus:
-Implementing a UI Automator test to validate the "Watch Trailer" functionality in the MovieDetail screen.
+## Current Work Focus
+Refining the user interface of the `ParentalCodeScreen` to improve user feedback.
 
-## Task Details:
-- Add `testTag("watchTrailer")` and `semantics { contentDescription = "Watch Trailer Button" }` to the "Watch Trailer" composable in `app/src/main/java/com/example/movie/ui/detail/components/DetailBodyContent.kt`.
-- Set `contentDescription = "videoPlayerView"` directly on the `PlayerView` instance within the `AndroidView` in `app/src/main/java/com/example/movie/ui/detail/components/VideoPlayer.kt` for reliable UI Automator detection.
-- Create a new UI test `testWatchTrailer_LaunchesAndDisplaysVideoPlayer` in `app/src/androidTest/java/com/example/movie/MovieNavigationTest.kt`.
-  - The test navigates to a movie detail.
-  - Clicks the "Watch Trailer" button.
-  - Verifies the video player (identified by `contentDescription = "videoPlayerView"`) becomes visible.
+## Task Details
+- Show an `AlertBox` composable to display success or error messages based on PIN validation.
+- The `AlertBox` should appear directly below the PIN input field for contextual relevance.
 
-## Recent Changes:
-- Added `Modifier.testTag("watchTrailer").semantics { contentDescription = "Watch Trailer Button" }` to the "Watch Trailer" `Text` composable in `app/src/main/java/com/example/movie/ui/detail/components/DetailBodyContent.kt`.
-- **Corrected video player identification**: Modified `app/src/main/java/com/example/movie/ui/detail/components/VideoPlayer.kt` to set `contentDescription = "videoPlayerView"` directly on the `PlayerView` instance instead of using `testTag` on the `AndroidView` composable. This is to address the "Element with tag 'videoPlayerView' not found" error.
-- Added the `testWatchTrailer_LaunchesAndDisplaysVideoPlayer` method and associated constants (`WATCH_TRAILER_BUTTON_TAG`, `VIDEO_PLAYER_VIEW_TAG`) to `app/src/androidTest/java/com/example/movie/MovieNavigationTest.kt`. The test still uses `VIDEO_PLAYER_VIEW_TAG` which corresponds to the `contentDescription`.
+## Recent Changes
+- Modified `app/src/main/java/com/example/movie/ui/parental/ParentalCodeScreen.kt`.
+- Moved the `AlertBox` to be positioned directly below the `PincodeInputComposable`.
+- Removed the previous `Text`-based feedback messages.
 
-## Next Steps:
-1. Update `memento/progress.md` to reflect the correction for the "Watch Trailer" test.
-2. User to re-run the tests to verify the `testWatchTrailer_LaunchesAndDisplaysVideoPlayer` test now passes with the corrected `contentDescription` on `PlayerView`.
-3. Await next task or feedback.
+## Next Steps
+1. Update `memento/progress.md` to reflect the UI refinement.
+2. Await next task or feedback.

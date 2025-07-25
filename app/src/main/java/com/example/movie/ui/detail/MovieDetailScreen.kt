@@ -28,6 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.movie.ui.components.LoadingView
 import com.example.movie.ui.detail.components.DetailBodyContent
 import com.example.movie.ui.detail.components.DetailTopContent
+import com.example.movie.ui.detail.components.ParentalCodeValidation
 import com.example.movie.ui.detail.components.VideoPlayer
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
@@ -42,70 +43,100 @@ fun MovieDetailScreen(
     val state by movieDetailViewMode.detailState.collectAsStateWithLifecycle()
     var showVideoPlayer by remember { mutableStateOf(false) }
     var videoUrl by remember { mutableStateOf("https://www.youtube.com/watch?v=YbJOTdZBX1g") }
-    Box(modifier = modifier
-        .fillMaxWidth()
+    var isParentalCodeValidated by remember { mutableStateOf(false) }
+
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
         // Removed testTag from root Box
     ) {
-        if (showVideoPlayer && videoUrl.isNotEmpty()) {
-            VideoPlayer(
-                videoUrl = videoUrl,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.Center)
-                    .testTag("videoPlayerView").semantics{contentDescription= "videoPlayerView"}
-            )
-          //  ExoMediaPlayer(videoUrl=videoUrl,modifier=modifier)
-            IconButton(onClick = { showVideoPlayer = false }, modifier = Modifier.align(Alignment.TopEnd)) {
-                Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Close Video")
-            }
-        } else {
-            AnimatedVisibility(
-                state.error != null,
-                modifier = Modifier.align(Alignment.TopCenter)
-            ) {
-                Text(
-                    state.error ?: "unknown",
-                    color = MaterialTheme.colorScheme.error,
-                    maxLines = 2
+        if (isParentalCodeValidated) {
+            if (showVideoPlayer && videoUrl.isNotEmpty()) {
+                VideoPlayer(
+                    videoUrl = videoUrl,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center)
+                        .testTag("videoPlayerView")
+                        .semantics { contentDescription = "videoPlayerView" }
                 )
-            }
-            AnimatedVisibility(visible = !state.isLoading && state.error == null) {
-                BoxWithConstraints(modifier = Modifier.fillMaxSize().testTag("movie_details_screen").semantics { contentDescription = "movie_details_screen" }) { // Added testTag here
-                    val boxHeight = maxHeight
-                    val topItemHeight = boxHeight * .4f
-                    val bodyItemHeight = boxHeight * .6f
-                    state.movieDetail?.let { movieDetail ->
-                        DetailTopContent(
-                            movieDetail = movieDetail,
-                            modifier = Modifier
-                                .height(topItemHeight)
-                                .align(Alignment.TopCenter),
-                            onWatchTrailer = { url ->
-                                videoUrl = url
-                                showVideoPlayer = true
-                            }
-                        )
-                        DetailBodyContent(
-                            movieDetail = movieDetail,
-                            movies = state.movies,
-                            isMovieLoading = state.isMovieLoading,
-                            fetchMovies = movieDetailViewMode::fetchMovie,
-                            onMovieClick = onMovieClick,
-                            onActorClick = onActorClick,
-                            onWatchVideo = { url ->
-                                videoUrl = url
-                                showVideoPlayer = true
-                            },
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .height(bodyItemHeight)
-                        )
+                //  ExoMediaPlayer(videoUrl=videoUrl,modifier=modifier)
+                IconButton(
+                    onClick = { showVideoPlayer = false },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Close Video"
+                    )
+                }
+            } else {
+                AnimatedVisibility(
+                    state.error != null,
+                    modifier = Modifier.align(Alignment.TopCenter)
+                ) {
+                    Text(
+                        state.error ?: "unknown",
+                        color = MaterialTheme.colorScheme.error,
+                        maxLines = 2
+                    )
+                }
+                AnimatedVisibility(visible = !state.isLoading && state.error == null) {
+                    BoxWithConstraints(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("movie_details_screen")
+                            .semantics { contentDescription = "movie_details_screen" }) { // Added testTag here
+                        val boxHeight = maxHeight
+                        val topItemHeight = boxHeight * .4f
+                        val bodyItemHeight = boxHeight * .6f
+                        state.movieDetail?.let { movieDetail ->
+                            DetailTopContent(
+                                movieDetail = movieDetail,
+                                modifier = Modifier
+                                    .height(topItemHeight)
+                                    .align(Alignment.TopCenter),
+                                onWatchTrailer = { url ->
+                                    videoUrl = url
+                                    showVideoPlayer = true
+                                }
+                            )
+                            DetailBodyContent(
+                                movieDetail = movieDetail,
+                                movies = state.movies,
+                                isMovieLoading = state.isMovieLoading,
+                                fetchMovies = movieDetailViewMode::fetchMovie,
+                                onMovieClick = onMovieClick,
+                                onActorClick = onActorClick,
+                                onWatchVideo = { url ->
+                                    videoUrl = url
+                                    showVideoPlayer = true
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .height(bodyItemHeight)
+                            )
+                        }
                     }
                 }
+                IconButton(
+                    onClick = onNavigateUp,
+                    modifier = Modifier.align(Alignment.TopStart)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
             }
-            IconButton(onClick = onNavigateUp, modifier = Modifier.align(Alignment.TopStart)) {
-                Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back")
-            }
+        } else {
+            ParentalCodeValidation(
+                onValidated = { isValidated ->
+                    isParentalCodeValidated = isValidated
+                },
+                onNavigateUp = onNavigateUp
+            )
         }
     }
     LoadingView(isLoading = state.isLoading)
